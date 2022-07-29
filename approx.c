@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#include <limits.h>
 #define radius 1
 
 double * generatecoords(void);
@@ -11,13 +11,11 @@ int main()
 {
     srand(time(NULL));
     time_t starttime;
-
-    int samples;
-    char * temp = malloc(sizeof(char)*13);
-    printf("How many samples do you wish to use?\n");
-    //do high numbers at own risk
-    scanf("%15s",temp);
-    samples=atoi(temp);
+    char temp[21];
+    //do high numbers at own risk, do not recommend
+    printf("How many samples do you wish to use? (%u maximum).\n", UINT_MAX);
+    fgets(temp, 21, stdin);
+    unsigned int samples = atoi(temp);
     time(&starttime);
 
     if (samples == 0)
@@ -41,7 +39,7 @@ int main()
 
     time_t elapsedtime = time(NULL)-starttime;
 
-    printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: %ld.\n", result, samples, elapsedtime);
+    printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: About %ld seconds.\n", result, samples, elapsedtime);
 
     return 0;
 }
