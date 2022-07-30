@@ -24,15 +24,15 @@ int main()
         return 0;
     }
     
-    double ** allcoordinates = malloc(sizeof(double)*2*samples);
+    double * allcoordinates = malloc(sizeof(double)*2);
 
     int i;
     int counter = 0;
 
     for (i=0; i<samples; i++) 
     {
-        allcoordinates[i]=generatecoords();
-        counter+=checkcircle(allcoordinates[i]);
+        allcoordinates=generatecoords();
+        counter+=checkcircle(allcoordinates);
     }
     counter*=4;
     double result = (double) counter / samples;
@@ -40,7 +40,7 @@ int main()
     time_t elapsedtime = time(NULL)-starttime;
 
     printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: About %ld seconds.\n", result, samples, elapsedtime);
-
+    free(allcoordinates);
     return 0;
 }
 //generate one set of coordinates between 0 and 1
