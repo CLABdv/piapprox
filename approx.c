@@ -4,19 +4,19 @@
 #include <limits.h>
 #define radius 1
 
-double * generatecoords(void);
-int checkcircle(double *);
+void generatecoords(float *);
+int checkcircle(float *);
 
 int main()
 {
     srand(time(NULL));
-    time_t starttime;
+    clock_t starttime, endtime;
     char temp[21];
     //do high numbers at own risk, do not recommend
     printf("How many samples do you wish to use? (%u maximum).\n", UINT_MAX);
     fgets(temp, 21, stdin);
     unsigned int samples = atoi(temp);
-    time(&starttime);
+    starttime=clock();
 
     if (samples == 0)
     {
@@ -24,38 +24,36 @@ int main()
         return 0;
     }
     
-    double * allcoordinates = malloc(sizeof(double)*2);
+    float *allcoordinates = malloc(sizeof(float)*2);
 
     int i;
-    int counter = 0;
+    unsigned long long counter = 0;
 
     for (i=0; i<samples; i++) 
     {
-        allcoordinates=generatecoords();
+        generatecoords(allcoordinates);
         counter+=checkcircle(allcoordinates);
     }
-    counter*=4;
     double result = (double) counter / samples;
+    result*=4;
+    endtime= clock();
+    double elapsedtime = (double) (endtime-starttime)/(double) CLOCKS_PER_SEC;
 
-    time_t elapsedtime = time(NULL)-starttime;
-
-    printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: About %ld seconds.\n", result, samples, elapsedtime);
+    printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: About %lf seconds.\n", result, samples, elapsedtime);
     free(allcoordinates);
     return 0;
 }
 //generate one set of coordinates between 0 and 1
-double * generatecoords(void)
+void generatecoords(float * coords)
 {
-    double * coords = malloc(sizeof(double)*2);
     int i;
     //create x and y coordinates between 0 and 1 (max value of rand is 1)
-    for (i=0; i<2; i++) coords[i] = (double)1/RAND_MAX*rand();
+    for (i=0; i<2; i++) coords[i] = (float)1/RAND_MAX*rand();
 
-    return coords;
 }
 
 //1 indicates inside circle
-int checkcircle(double * coords)
+int checkcircle(float * coords)
 {
 //    printf("%lf, %lf\n",coords[0],coords[1]);
     if (coords[0]*coords[0] + coords[1] * coords[1] > radius) return 0;
