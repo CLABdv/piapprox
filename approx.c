@@ -10,13 +10,13 @@ int checkcircle(float *);
 int main()
 {
     srand(time(NULL));
-    clock_t starttime, endtime;
+    struct timespec start, end;
     char temp[21];
     //do high numbers at own risk, do not recommend
     printf("How many samples do you wish to use? (%u maximum).\n", UINT_MAX);
     fgets(temp, 21, stdin);
     unsigned int samples = atoi(temp);
-    starttime=clock();
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     if (samples == 0)
     {
@@ -36,8 +36,8 @@ int main()
     }
     double result = (double) counter / samples;
     result*=4;
-    endtime= clock();
-    double elapsedtime = (double) (endtime-starttime)/(double) CLOCKS_PER_SEC;
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double elapsedtime = (double) (end.tv_sec-start.tv_sec)+ 1e-9*(end.tv_nsec-start.tv_nsec);
 
     printf("Pi is roughly equal to %lf (sample size: %d). Elapsed time: About %lf seconds.\n", result, samples, elapsedtime);
     free(allcoordinates);
